@@ -1,0 +1,29 @@
+#SPDX-License-Identifier: MIT-0
+---
+jenkins_plugins:
+  - git
+  - workflow-aggregator
+  - blueocean
+  - credentials
+  - ssh-agent
+  - matrix-auth
+  - docker
+  - docker-workflow
+  - job-dsl
+  - configuration-as-code
+  - kubernetes
+  - kubernetes-credentials
+  - kubernetes-cli
+  - ec2
+  - dependency-check-jenkins-plugin
+  - ansicolor
+  - timestamper
+  - ws-cleanup
+  - pipeline-utility-steps
+  - prometheus
+  - http_request
+  - htmlpublisher
+  - mask-passwords
+  - basic-branch-build-strategies
+
+# defaults file for roles/jenkins_config

@@ -1,0 +1,8 @@
+- name: Install Jenkins on target VM
+  hosts: all
+  become: yes
+  vars_files:
+    - ../vault.yml  # Ensure this file is encrypted with Ansible Vault
+  roles:
+    - jenkins
+    - jenkins_config

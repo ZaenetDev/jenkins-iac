@@ -1,0 +1,67 @@
+- name: Install required dependencies
+  apt:
+    name: openjdk-17-jdk
+    state: present
+    update_cache: yes
+
+- name: Ensure keyring directory exists
+  file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download Jenkins public key
+  ansible.builtin.get_url:
+    url: https://pkg.jenkins.io/debian/jenkins.io-2023.key
+    dest: /usr/share/keyrings/jenkins-keyring.asc
+    mode: '0644'
+
+- name: Add Jenkins repository using keyring
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/"
+    state: present
+    filename: jenkins
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Jenkins
+  apt:
+    name: jenkins
+    state: present
+
+- name: Ensure Jenkins is running and enabled
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
+
+- name: Ensure Jenkins init directory exists
+  file:
+    path: /var/lib/jenkins/init.groovy.d
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: '0755'
+
+- name: Copy admin Groovy script
+  template:
+    src: 01-admin-user.groovy.j2
+    dest: /var/lib/jenkins/init.groovy.d/01-admin-user.groovy
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+
+- name: Restart Jenkins to apply Groovy config
+  service:
+    name: jenkins
+    state: restarted
+
+- name: Disable Jenkins install wizard with marker file
+  copy:
+    dest: /var/lib/jenkins/jenkins.install.UpgradeWizard.state
+    content: "2.0"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'

@@ -1,0 +1,23 @@
+- name: Wait for Jenkins to be up
+  uri:
+    url: "{{ jenkins_url }}/login"
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 10
+  delay: 15
+
+  
+- name: Install required Jenkins plugins
+  community.general.jenkins_plugin:
+    name: "{{ item }}"
+    url: "{{ jenkins_url }}"
+    url_username: "{{ jenkins_admin_user }}"
+    url_password: "{{ jenkins_admin_password }}"
+  loop: "{{ jenkins_plugins }}"
+  when: jenkins_plugins is defined and jenkins_plugins | length > 0
+
+- name: Restart Jenkins to apply plugins cleanly
+  service:
+    name: jenkins
+    state: restarted

@@ -1,0 +1,23 @@
+#Terraform junk — root + any subfolders
+terraform/**/.terraform/
+terraform/**/terraform.tfstate
+terraform/**/terraform.tfstate.*
+terraform/**/terraform.tfvars
+terraform/**/.terraform.lock.hcl
+
+#Ansible vault secrets + pass file
+ansible/vault.yml
+ansible/.vault_pass.txt
+
+#SSH keys — never commit them
+*.pem
+*.pub
+
+#Editor junk
+*.swp
+*.swo
+*.bak
+*.tmp
+
+#Python venvs if you ever make one
+.venv/
