@@ -14,7 +14,7 @@ variable "pm_api_token_id" {
   sensitive   = true
 }
 
-variable "ssh_public_key_path" {
+variable "ssh_public_key" {
   description = "Path to Public SSH key to inject into VM"
   type        = string
 }
