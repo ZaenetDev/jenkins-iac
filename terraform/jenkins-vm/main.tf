@@ -35,7 +35,7 @@ resource "proxmox_vm_qemu" "ubuntu_vm" {
   ipconfig0   = "ip=dhcp"
   ciuser      = "ubuntu"
   cipassword  = var.cipassword
-  sshkeys     = file(var.ssh_public_key_path)
+  sshkeys     = var.ssh_public_key
 
   cpu {
     cores   = 2
