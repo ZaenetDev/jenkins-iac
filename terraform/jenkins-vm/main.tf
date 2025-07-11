@@ -24,7 +24,7 @@ provider "proxmox" {
 }
 
 resource "proxmox_vm_qemu" "ubuntu_vm" {
-  name        = "jenkins"
+  name        = var.vm_name
   target_node = "pve"
   memory      = 4096
   clone       = "ubuntu-24.04-template"

@@ -1,3 +1,9 @@
+variable "vm_name" {
+  description = "Name of the VM to create"
+  type        = string
+  default     = "jenkins-vm"
+}
+
 variable "pm_api_url" {
   description = "The full Proxmox API URL"
   type        = string
