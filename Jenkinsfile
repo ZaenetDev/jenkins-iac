@@ -11,6 +11,7 @@ pipeline {
     SSH_PUBLIC_KEY = credentials('ssh_public_key')
     SSH_USER= "ubuntu"
     SSH_KEY_FILE = credentials('jenkins-ssh-key')
+    ANSIBLE_VAULT_PASS = credentials('ansible-vault-pass')
   }
 
   stages {
@@ -87,6 +88,7 @@ pipeline {
           -i "$JENKINS_VM_IP," \
           -u "$SSH_USER" \
           --private-key "$SSH_KEY_FILE" \
+          --vault-password-file <(echo "$ANSIBLE_VAULT_PASS") \
           playbooks/jenkins.yml
           '''
         }
