@@ -88,25 +88,26 @@ pipeline {
     stage('Run Ansible Playbook') {
       steps {
         withCredentials([
-          file(credentialsId: 'vault-yml-file', variable: 'VAULT_FILE')
+          file(credentialsId: 'VAULT_FILE', variable: 'VAULT_PATH'),
+          string(credentialsId: 'ANSIBLE_VAULT_PASS', variable: 'ANSIBLE_VAULT_PASS'),
+          file(credentialsId: 'SSH_KEY_FILE', variable: 'SSH_KEY_PATH')
         ]) {
-          /* groovylint-disable-next-line NestedBlockDepth */
-          dir(env.ANSIBLE_DIR) {
+          dir('ansible') {
             sh """
-              #!/bin/bash
-              echo "$ANSIBLE_VAULT_PASS" > .vault_pass.txt
+              echo '${ANSIBLE_VAULT_PASS}' > .vault_pass.txt
               chmod 600 .vault_pass.txt
 
               ansible-playbook \
-                -i "$JENKINS_IP," \
-                -u "$SSH_USER" \
-                --private-key "$SSH_KEY_FILE" \
+                -i ${VM_IP}, \
+                -u ubuntu \
+                --private-key ${SSH_KEY_PATH} \
                 --vault-password-file .vault_pass.txt \
-                -e "@$VAULT_FILE" \
-                -e "vm_hostname=${env.VM_NAME}" \
+                -e @${VAULT_PATH} \
+                -e vm_hostname=${VM_NAME} \
                 playbooks/install_jenkins.yml
 
-              rm -f .vault_pass.txt \
+              rm -f .vault_pass.txt
+              echo "Ansible playbook executed successfully."
             """
           }
         }
