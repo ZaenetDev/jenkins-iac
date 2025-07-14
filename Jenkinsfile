@@ -106,8 +106,8 @@ pipeline {
                 -e "vm_hostname=${env.VM_NAME}" \
                 playbooks/install_jenkins.yml
 
-              rm -f .vault_pass.txt
-            '''
+              rm -f .vault_pass.txt\
+            """
           }
         }
       }
