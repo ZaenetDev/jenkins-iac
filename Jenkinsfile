@@ -105,6 +105,7 @@ pipeline {
                   --vault-password-file "$VAULT_PASS_FILE" \
                   -e "@$VAULT_PATH" \
                   -e "vm_hostname=${VM_NAME}" \
+                  -e "jenkins_url=http://${JENKINS_IP}:8080" \
                   playbooks/install_jenkins.yml
 
                 rm -f "$VAULT_PASS_FILE" "$SSH_KEY_PATH"
