@@ -93,6 +93,7 @@ pipeline {
           /* groovylint-disable-next-line NestedBlockDepth */
           dir(env.ANSIBLE_DIR) {
             sh '''
+              #!/bin/bash
               echo "$ANSIBLE_VAULT_PASS" > .vault_pass.txt
               chmod 600 .vault_pass.txt
 
