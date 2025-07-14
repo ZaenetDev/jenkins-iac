@@ -3,6 +3,18 @@
   become: yes
   vars_files:
     - ../vault.yml  # Ensure this file is encrypted with Ansible Vault
+
+  pre_tasks:
+    - name: Set hostname explicitly
+      ansible.builtin.hostname:
+        name: "{{ vm_hostname }}"
+
+    - name: Ensure hostname is in /etc/hosts
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "127.0.0.1 {{ vm_hostname }}"
+        create: yes
+  
   roles:
     - jenkins
     - jenkins_config

@@ -102,7 +102,8 @@ pipeline {
                 --private-key "$SSH_KEY_FILE" \
                 --vault-password-file .vault_pass.txt \
                 -e "@$VAULT_FILE" \
-                playbooks/jenkins.yml
+                -e "vm_hostname=${env.VM_NAME}" \
+                playbooks/install_jenkins.yml
 
               rm -f .vault_pass.txt
             '''
