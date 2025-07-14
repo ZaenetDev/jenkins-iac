@@ -89,7 +89,7 @@ pipeline {
       steps {
         script {
           withCredentials([
-            file(credentialsId: 'vault-password-file', variable: 'VAULT_PASS_FILE'),
+            file(credentialsId: 'ansible-vault-pass', variable: 'VAULT_PASS_FILE'),
             file(credentialsId: 'vault-yml-file', variable: 'VAULT_PATH'),
             file(credentialsId: 'jenkins-ssh-key', variable: 'SSH_KEY_PATH')
           ]) {
