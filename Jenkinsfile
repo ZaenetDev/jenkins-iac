@@ -11,9 +11,7 @@ pipeline {
     CIPASSWORD = credentials('cipassword')
     SSH_PUBLIC_KEY = credentials('ssh_public_key')
     SSH_USER = 'ubuntu'
-    SSH_KEY_FILE = credentials('jenkins-ssh-key')
-    ANSIBLE_VAULT_PASS = credentials('ansible-vault-pass')
-    VAULT_FILE = credentials('vault-yml-file')
+    ANSIBLE_VAULT_PASS = credentials('ansible-vault-pass') // string
     TERRAFORM_DIR = 'terraform/jenkins-vm'
     ANSIBLE_DIR = 'ansible'
   }
@@ -34,6 +32,7 @@ pipeline {
     stage('Terraform Init') {
       steps {
         dir(env.TERRAFORM_DIR) {
+          /* groovylint-disable-next-line DuplicateStringLiteral */
           sh 'terraform init'
         }
       }
@@ -70,8 +69,8 @@ pipeline {
         }
       }
     }
+
     stage('Terraform Output') {
-      /* groovylint-disable-next-line NestedBlockDepth */
       steps {
         dir(env.TERRAFORM_DIR) {
           /* groovylint-disable-next-line NestedBlockDepth */
@@ -86,48 +85,63 @@ pipeline {
         }
       }
     }
+
     stage('Run Ansible Playbook') {
       steps {
-        withCredentials([
-          file(credentialsId: 'VAULT_FILE', variable: 'VAULT_PATH'),
-          string(credentialsId: 'ANSIBLE_VAULT_PASS', variable: 'ANSIBLE_VAULT_PASS'),
-          file(credentialsId: 'SSH_KEY_FILE', variable: 'SSH_KEY_PATH')
-        ]) {
-          dir('ansible') {
-            sh """
-              echo '${ANSIBLE_VAULT_PASS}' > .vault_pass.txt
-              chmod 600 .vault_pass.txt
+        script {
+          withCredentials([
+            file(credentialsId: 'vault-yml-file', variable: 'VAULT_PATH'),
+            file(credentialsId: 'jenkins-ssh-key', variable: 'SSH_KEY_PATH')
+          /* groovylint-disable-next-line NestedBlockDepth */
+          ]) {
+            /* groovylint-disable-next-line NestedBlockDepth */
+            dir(env.ANSIBLE_DIR) {
+              sh """
+                echo '${ANSIBLE_VAULT_PASS}' > .vault_pass.txt
+                chmod 600 .vault_pass.txt
 
-              ansible-playbook \
-                -i ${VM_IP}, \
-                -u ubuntu \
-                --private-key ${SSH_KEY_PATH} \
-                --vault-password-file .vault_pass.txt \
-                -e @${VAULT_PATH} \
-                -e vm_hostname=${VM_NAME} \
-                playbooks/install_jenkins.yml
+                ansible-playbook \
+                  -i "${JENKINS_IP}," \
+                  -u "${SSH_USER}" \
+                  --private-key "${SSH_KEY_PATH}" \
+                  --vault-password-file .vault_pass.txt \
+                  -e "@${VAULT_PATH}" \
+                  -e "vm_hostname=${VM_NAME}" \
+                  playbooks/install_jenkins.yml
 
-              rm -f .vault_pass.txt
-              echo "Ansible playbook executed successfully."
-            """
+                rm -f .vault_pass.txt
+              """
+            }
           }
         }
       }
     }
+
     stage('Verify Jenkins') {
       steps {
-        dir(env.ANSIBLE_DIR) {
-          sh """
-          ansible all -i "$JENKINS_IP," -m wait_for \
-          -a "port=8080 timeout=60" \
-          -u "$SSH_USER" --private-key "$SSH_KEY_FILE"
-          """
+        script {
+          withCredentials([
+            /* groovylint-disable-next-line DuplicateMapLiteral, DuplicateStringLiteral */
+            file(credentialsId: 'jenkins-ssh-key', variable: 'SSH_KEY_PATH')
+          /* groovylint-disable-next-line DuplicateStringLiteral */
+          /* groovylint-disable-next-line NestedBlockDepth */
+          ]) {
+            /* groovylint-disable-next-line NestedBlockDepth */
+            dir(env.ANSIBLE_DIR) {
+              sh """
+                ansible all -i "${JENKINS_IP}," -m wait_for \
+                -a "port=8080 timeout=60" \
+                -u "${SSH_USER}" --private-key "${SSH_KEY_PATH}"
+              """
+            }
+          }
         }
       }
     }
+
     stage('Jenkins Info') {
       steps {
-        echo "Jenkins deployed at: http://$JENKINS_IP:8080"
+        echo "Jenkins deployed at: http://${JENKINS_IP}:8080"
       }
     }
   }
