@@ -75,7 +75,7 @@ pipeline {
               returnStdout: true
             ).trim()
             env.JENKINS_VM_IP = ip
-            echo "Captured VM IP: ${env.JENKINS_VM_IP}"
+            echo "Captured VM IP: ${env.JENKINS_IP}"
           }
         }
       }
