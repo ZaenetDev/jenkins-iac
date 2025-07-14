@@ -13,6 +13,7 @@ pipeline {
     SSH_USER = 'ubuntu'
     SSH_KEY_FILE = credentials('jenkins-ssh-key')
     ANSIBLE_VAULT_PASS = credentials('ansible-vault-pass')
+    VAULT_FILE = credentials('ansible-vault-file')
     TERRAFORM_DIR = 'terraform/jenkins-vm'
     ANSIBLE_DIR = 'ansible'
   }
