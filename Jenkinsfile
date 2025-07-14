@@ -11,7 +11,6 @@ pipeline {
     CIPASSWORD = credentials('cipassword')
     SSH_PUBLIC_KEY = credentials('ssh_public_key')
     SSH_USER = 'ubuntu'
-    ANSIBLE_VAULT_PASS = credentials('ansible-vault-pass') // string
     TERRAFORM_DIR = 'terraform/jenkins-vm'
     ANSIBLE_DIR = 'ansible'
   }
@@ -90,26 +89,25 @@ pipeline {
       steps {
         script {
           withCredentials([
+            file(credentialsId: 'vault-password-file', variable: 'VAULT_PASS_FILE'),
             file(credentialsId: 'vault-yml-file', variable: 'VAULT_PATH'),
             file(credentialsId: 'jenkins-ssh-key', variable: 'SSH_KEY_PATH')
-          /* groovylint-disable-next-line NestedBlockDepth */
           ]) {
-            /* groovylint-disable-next-line NestedBlockDepth */
             dir(env.ANSIBLE_DIR) {
               sh """
-                echo '${ANSIBLE_VAULT_PASS}' > .vault_pass.txt
-                chmod 600 .vault_pass.txt
+                chmod 600 "$VAULT_PASS_FILE"
+                chmod 600 "$SSH_KEY_PATH"
 
                 ansible-playbook \
                   -i "${JENKINS_IP}," \
                   -u "${SSH_USER}" \
-                  --private-key "${SSH_KEY_PATH}" \
-                  --vault-password-file .vault_pass.txt \
-                  -e "@${VAULT_PATH}" \
+                  --private-key "$SSH_KEY_PATH" \
+                  --vault-password-file "$VAULT_PASS_FILE" \
+                  -e "@$VAULT_PATH" \
                   -e "vm_hostname=${VM_NAME}" \
                   playbooks/install_jenkins.yml
 
-                rm -f .vault_pass.txt
+                rm -f "$VAULT_PASS_FILE" "$SSH_KEY_PATH"
               """
             }
           }
