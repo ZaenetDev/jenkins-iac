@@ -54,6 +54,7 @@ resource "proxmox_vm_qemu" "ubuntu_vm" {
     model  = "virtio"
     bridge = "vmbr0"
     tag    = 10
+    macaddr = null
   }
 }
 
