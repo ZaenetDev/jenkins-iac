@@ -41,7 +41,7 @@ pipeline {
     stage('Terraform Plan') {
       steps {
         dir(env.TERRAFORM_DIR) {
-          sh '''
+          sh """
             terraform plan \
               -var "vm_name=$VM_NAME" \
               -var "pm_api_url=$PM_API_URL" \
@@ -49,7 +49,7 @@ pipeline {
               -var "pm_api_token_secret=$PM_API_TOKEN_SECRET" \
               -var "cipassword=$CIPASSWORD" \
               -var "ssh_public_key=$SSH_PUBLIC_KEY"
-          '''
+          """
         }
       }
     }
@@ -57,7 +57,7 @@ pipeline {
     stage('Terraform Apply') {
       steps {
         dir(env.TERRAFORM_DIR) {
-          sh '''
+          sh """
             terraform apply -auto-approve \
               -var "pm_api_url=$PM_API_URL" \
               -var "pm_api_token_id=$PM_API_TOKEN_ID" \
@@ -65,7 +65,7 @@ pipeline {
               -var "cipassword=$CIPASSWORD" \
               -var "ssh_public_key=$SSH_PUBLIC_KEY" \
               -var "vm_name=$VM_NAME"
-          '''
+          """
         }
       }
     }
@@ -92,7 +92,7 @@ pipeline {
         ]) {
           /* groovylint-disable-next-line NestedBlockDepth */
           dir(env.ANSIBLE_DIR) {
-            sh '''
+            sh """
               #!/bin/bash
               echo "$ANSIBLE_VAULT_PASS" > .vault_pass.txt
               chmod 600 .vault_pass.txt
@@ -106,7 +106,7 @@ pipeline {
                 -e "vm_hostname=${env.VM_NAME}" \
                 playbooks/install_jenkins.yml
 
-              rm -f .vault_pass.txt\
+              rm -f .vault_pass.txt \
             """
           }
         }
@@ -115,11 +115,11 @@ pipeline {
     stage('Verify Jenkins') {
       steps {
         dir(env.ANSIBLE_DIR) {
-          sh '''
+          sh """
           ansible all -i "$JENKINS_IP," -m wait_for \
           -a "port=8080 timeout=60" \
           -u "$SSH_USER" --private-key "$SSH_KEY_FILE"
-          '''
+          """
         }
       }
     }
