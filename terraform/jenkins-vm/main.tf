@@ -1,13 +1,6 @@
 terraform {
-  #cloud {
-  #organization = "zaenet"
-  #workspaces{ 
-  #name= "jenkins-vm"
-  #}
-  #}
 
-
-  required_providers {
+required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
       version = "3.0.2-rc01"
@@ -61,19 +54,6 @@ resource "proxmox_vm_qemu" "ubuntu_vm" {
     model  = "virtio"
     bridge = "vmbr0"
     tag    = 10
-  }
-
-  provisioner "local-exec" {
-    command     = <<EOT
-      ANSIBLE_CONFIG=../../ansible/ansible.cfg \
-      ansible-playbook -i '${self.default_ipv4_address},' \
-        -u ubuntu \
-        --private-key ~/.ssh/id_ed25519 \
-        --extra-vars 'jenkins_url=http://${self.default_ipv4_address}:8080' \
-        --vault-password-file ../../ansible/.vault_pass.txt \
-        ../../ansible/playbooks/install_jenkins.yml
-    EOT
-    working_dir = path.module
   }
 }
 
