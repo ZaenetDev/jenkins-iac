@@ -27,10 +27,21 @@ This project demonstrates my journey in learning and implementing Jenkins using 
 
 ---
 
-<details> <summary>📁 Repository Structure</summary>
+## 📁 Repository Structure
 
-<pre><code>### 📁 Repository Structure ``` jenkins-iac/ ├── terraform/ │ └── jenkins-vm/ # Proxmox VM provisioning ├── ansible/ │ └── playbooks/ # Jenkins install & config playbook ├── docs/ │ └── jenkins-iac-journey.md # Narrative & learning journey ├── Jenkinsfile # Declarative Jenkins pipeline └── README.md # Project overview ``` </code></pre>
-</details>
+jenkins-iac
+├── Jenkinsfile
+├── README.md
+├── ansible
+│   ├── ansible.cfg
+│   ├── inventory
+│   ├── playbooks
+│   ├── roles
+│   └── vault.yml
+├── docs
+│   └── Jenkins-IAC-journey.md
+└── terraform
+    └── jenkins-vm
 
 ---
 
