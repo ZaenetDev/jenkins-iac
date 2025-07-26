@@ -12,7 +12,7 @@ This project demonstrates my journey in learning and implementing Jenkins using 
 
 🔍 Dive into the process behind this repo:
 
-- [Jenkins IaC Journey (Full Story)](docs/jenkins-iac-journey.md)
+- [Jenkins IaC Journey (Full Story)](docs/Jenkins-IAC-journey.md)
 
 ---
 
@@ -27,16 +27,18 @@ This project demonstrates my journey in learning and implementing Jenkins using 
 
 ---
 
-## 📁 Repo Structure
+<details> <summary>📁 Repository Structure</summary>
 
 jenkins-iac/
 ├── terraform/
-│ └── jenkins-vm/ # Terraform for VM provisioning
+│   └── jenkins-vm/            # Terraform for VM provisioning
 ├── ansible/
-│ └── playbooks/ # Jenkins install & config playbook
-├── Jenkinsfile # Declarative pipeline
-docs/
-└── jenkins-iac-journey.md # Full narrative & documentation
+│   └── playbooks/             # Jenkins install & config playbook
+├── Jenkinsfile                # Declarative Jenkins pipeline
+├── docs/
+│   └── jenkins-iac-journey.md # Full narrative & documentation
+└── README.md
+</details>
 
 ---
 
