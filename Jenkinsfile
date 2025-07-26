@@ -1,7 +1,7 @@
 /* groovylint-disable DuplicateMapLiteral, DuplicateStringLiteral, GStringExpressionWithinString, NestedBlockDepth */
 /* groovylint-disable-next-line CompileStatic */
 pipeline {
-  agent any
+  agent { label 'jenkins-worker-40' }
 
   environment {
     VM_NAME = "jenkins-worker-${BUILD_NUMBER}"
