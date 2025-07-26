@@ -35,7 +35,7 @@ pipeline {
     stage('Terraform Plan') {
       steps {
         withCredentials([
-          string(credentialsId: 'pm_api_url', variable: 'PM_API_URL'),
+          string(credentialsId: 'pm-api-url', variable: 'PM_API_URL'),
           string(credentialsId: 'pm_api_token_id', variable: 'PM_API_TOKEN_ID'),
           string(credentialsId: 'pm_api_token_secret', variable: 'PM_API_TOKEN_SECRET'),
           string(credentialsId: 'cipassword', variable: 'CIPASSWORD'),
@@ -52,14 +52,14 @@ pipeline {
                 -var "ssh_public_key=$SSH_PUBLIC_KEY"
               """
             }
-          }
         }
       }
+    }
 
     stage('Terraform Apply') {
       steps {
           withCredentials([
-            string(credentialsId: 'pm_api_url', variable: 'PM_API_URL'),
+            string(credentialsId: 'pm-api-url', variable: 'PM_API_URL'),
             string(credentialsId: 'pm_api_token_id', variable: 'PM_API_TOKEN_ID'),
             string(credentialsId: 'pm_api_token_secret', variable: 'PM_API_TOKEN_SECRET'),
             string(credentialsId: 'cipassword', variable: 'CIPASSWORD'),
@@ -77,8 +77,8 @@ pipeline {
               """
             }
           }
-        }
       }
+    }
 
     stage('Terraform Output') {
       steps {
