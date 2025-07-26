@@ -50,7 +50,6 @@ jenkins-iac
 
 - Jenkins is installed and configured via **automated pipeline**
 - Jenkins agent/worker is **manually registered** (to be automated soon)
-- GitHub commits can **trigger Jenkins builds**
 - Built-in **credentials handling and security practices**
 - Uses **cloud-init** and secret management for automation at scale
 
