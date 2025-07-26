@@ -1,3 +1,4 @@
+/* groovylint-disable DuplicateMapLiteral, DuplicateStringLiteral, GStringExpressionWithinString, NestedBlockDepth */
 /* groovylint-disable-next-line CompileStatic */
 pipeline {
   agent any
@@ -26,7 +27,6 @@ pipeline {
     stage('Terraform Init') {
       steps {
         dir(env.TERRAFORM_DIR) {
-          /* groovylint-disable-next-line DuplicateStringLiteral */
           sh 'terraform init'
         }
       }
@@ -83,7 +83,6 @@ pipeline {
     stage('Terraform Output') {
       steps {
         dir(env.TERRAFORM_DIR) {
-          /* groovylint-disable-next-line NestedBlockDepth */
           script {
             String ip = sh(
               script: 'terraform output -raw jenkins_ip',
@@ -131,12 +130,8 @@ pipeline {
       steps {
         script {
           withCredentials([
-            /* groovylint-disable-next-line DuplicateMapLiteral, DuplicateStringLiteral */
             file(credentialsId: 'jenkins-ssh-key', variable: 'SSH_KEY_PATH')
-          /* groovylint-disable-next-line DuplicateStringLiteral */
-          /* groovylint-disable-next-line NestedBlockDepth */
           ]) {
-            /* groovylint-disable-next-line NestedBlockDepth */
             dir(env.ANSIBLE_DIR) {
               sh '''
                 ansible all -i "${JENKINS_IP}," -m wait_for \
