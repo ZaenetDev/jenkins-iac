@@ -1,5 +1,9 @@
 # Jenkins Infrastructure as Code (IaC) Project 🚀
 
+[![Built with Terraform](https://img.shields.io/badge/infra-terraform-blueviolet)](https://www.terraform.io/)
+[![Configured with Ansible](https://img.shields.io/badge/config-ansible-red)](https://www.ansible.com/)
+[![CI: Jenkins](https://img.shields.io/badge/ci-jenkins-blue)](https://www.jenkins.io/)
+
 This project demonstrates my journey in learning and implementing Jenkins using Infrastructure as Code (IaC) principles with Terraform, Ansible, and Proxmox. It's part of my DevOps learning portfolio and reflects the skills I've built through self-teaching, hands-on debugging, and automation design.
 
 ---
