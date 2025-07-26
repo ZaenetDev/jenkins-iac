@@ -28,7 +28,7 @@ This project demonstrates my journey in learning and implementing Jenkins using 
 ---
 
 ## 📁 Repository Structure
-
+```
 jenkins-iac
 ├── Jenkinsfile
 ├── README.md
@@ -42,6 +42,7 @@ jenkins-iac
 │   └── Jenkins-IAC-journey.md
 └── terraform
     └── jenkins-vm
+```
 
 ---
 
