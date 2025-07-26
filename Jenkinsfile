@@ -42,7 +42,7 @@ pipeline {
           string(credentialsId: 'ssh_public_key', variable: 'SSH_PUBLIC_KEY')
         ]) {
             dir(env.TERRAFORM_DIR) {
-            sh """
+            sh '''
               terraform plan \
                 -var "vm_name=$VM_NAME" \
                 -var "pm_api_url=$PM_API_URL" \
@@ -50,7 +50,7 @@ pipeline {
                 -var "pm_api_token_secret=$PM_API_TOKEN_SECRET" \
                 -var "cipassword=$CIPASSWORD" \
                 -var "ssh_public_key=$SSH_PUBLIC_KEY"
-              """
+              '''
             }
         }
       }
@@ -66,7 +66,7 @@ pipeline {
             string(credentialsId: 'ssh_public_key', variable: 'SSH_PUBLIC_KEY')
           ]) {
             dir(env.TERRAFORM_DIR) {
-            sh """
+            sh '''
               terraform apply -auto-approve \
                 -var "pm_api_url=$PM_API_URL" \
                 -var "pm_api_token_id=$PM_API_TOKEN_ID" \
@@ -74,7 +74,7 @@ pipeline {
                 -var "cipassword=$CIPASSWORD" \
                 -var "ssh_public_key=$SSH_PUBLIC_KEY" \
                 -var "vm_name=$VM_NAME"
-              """
+              '''
             }
           }
       }
@@ -105,7 +105,7 @@ pipeline {
             file(credentialsId: 'jenkins-ssh-key', variable: 'SSH_KEY_PATH')
           ]) {
             dir(env.ANSIBLE_DIR) {
-              sh """
+              sh '''
                 chmod 600 "$VAULT_PASS_FILE"
                 chmod 600 "$SSH_KEY_PATH"
 
@@ -120,7 +120,7 @@ pipeline {
                   playbooks/install_jenkins.yml
 
                 rm -f "$VAULT_PASS_FILE" "$SSH_KEY_PATH"
-              """
+              '''
             }
           }
         }
@@ -138,11 +138,11 @@ pipeline {
           ]) {
             /* groovylint-disable-next-line NestedBlockDepth */
             dir(env.ANSIBLE_DIR) {
-              sh """
+              sh '''
                 ansible all -i "${JENKINS_IP}," -m wait_for \
                 -a "port=8080 timeout=60" \
                 -u "${SSH_USER}" --private-key "${SSH_KEY_PATH}"
-              """
+              '''
             }
           }
         }
