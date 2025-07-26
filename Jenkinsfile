@@ -5,11 +5,6 @@ pipeline {
   environment {
     VM_NAME = "jenkins-worker-${BUILD_NUMBER}"
     TF_IN_AUTOMATION = 'true'
-    PM_API_URL = credentials('pm-api-url')
-    PM_API_TOKEN_ID = credentials('pm_api_token_id')
-    PM_API_TOKEN_SECRET = credentials('pm_api_token_secret')
-    CIPASSWORD = credentials('cipassword')
-    SSH_PUBLIC_KEY = credentials('ssh_public_key')
     SSH_USER = 'ubuntu'
     TERRAFORM_DIR = 'terraform/jenkins-vm'
     ANSIBLE_DIR = 'ansible'
@@ -39,35 +34,51 @@ pipeline {
 
     stage('Terraform Plan') {
       steps {
-        dir(env.TERRAFORM_DIR) {
-          sh """
-            terraform plan \
-              -var "vm_name=$VM_NAME" \
-              -var "pm_api_url=$PM_API_URL" \
-              -var "pm_api_token_id=$PM_API_TOKEN_ID" \
-              -var "pm_api_token_secret=$PM_API_TOKEN_SECRET" \
-              -var "cipassword=$CIPASSWORD" \
-              -var "ssh_public_key=$SSH_PUBLIC_KEY"
-          """
+        withCredentials([
+          string(credentialsId: 'pm_api_url', variable: 'PM_API_URL'),
+          string(credentialsId: 'pm_api_token_id', variable: 'PM_API_TOKEN_ID'),
+          string(credentialsId: 'pm_api_token_secret', variable: 'PM_API_TOKEN_SECRET'),
+          string(credentialsId: 'cipassword', variable: 'CIPASSWORD'),
+          string(credentialsId: 'ssh_public_key', variable: 'SSH_PUBLIC_KEY')
+        ]) {
+            dir(env.TERRAFORM_DIR) {
+            sh """
+              terraform plan \
+                -var "vm_name=$VM_NAME" \
+                -var "pm_api_url=$PM_API_URL" \
+                -var "pm_api_token_id=$PM_API_TOKEN_ID" \
+                -var "pm_api_token_secret=$PM_API_TOKEN_SECRET" \
+                -var "cipassword=$CIPASSWORD" \
+                -var "ssh_public_key=$SSH_PUBLIC_KEY"
+              """
+            }
+          }
         }
       }
-    }
 
     stage('Terraform Apply') {
       steps {
-        dir(env.TERRAFORM_DIR) {
-          sh """
-            terraform apply -auto-approve \
-              -var "pm_api_url=$PM_API_URL" \
-              -var "pm_api_token_id=$PM_API_TOKEN_ID" \
-              -var "pm_api_token_secret=$PM_API_TOKEN_SECRET" \
-              -var "cipassword=$CIPASSWORD" \
-              -var "ssh_public_key=$SSH_PUBLIC_KEY" \
-              -var "vm_name=$VM_NAME"
-          """
+          withCredentials([
+            string(credentialsId: 'pm_api_url', variable: 'PM_API_URL'),
+            string(credentialsId: 'pm_api_token_id', variable: 'PM_API_TOKEN_ID'),
+            string(credentialsId: 'pm_api_token_secret', variable: 'PM_API_TOKEN_SECRET'),
+            string(credentialsId: 'cipassword', variable: 'CIPASSWORD'),
+            string(credentialsId: 'ssh_public_key', variable: 'SSH_PUBLIC_KEY')
+          ]) {
+            dir(env.TERRAFORM_DIR) {
+            sh """
+              terraform apply -auto-approve \
+                -var "pm_api_url=$PM_API_URL" \
+                -var "pm_api_token_id=$PM_API_TOKEN_ID" \
+                -var "pm_api_token_secret=$PM_API_TOKEN_SECRET" \
+                -var "cipassword=$CIPASSWORD" \
+                -var "ssh_public_key=$SSH_PUBLIC_KEY" \
+                -var "vm_name=$VM_NAME"
+              """
+            }
+          }
         }
       }
-    }
 
     stage('Terraform Output') {
       steps {
