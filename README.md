@@ -31,13 +31,18 @@ This project demonstrates my journey in learning and implementing Jenkins using 
 
 jenkins-iac/
 ├── terraform/
-│   └── jenkins-vm/            # Terraform for VM provisioning
+│   └── jenkins-vm/
+│       # Proxmox VM provisioning
 ├── ansible/
-│   └── playbooks/             # Jenkins install & config playbook
-├── Jenkinsfile                # Declarative Jenkins pipeline
+│   └── playbooks/
+│       # Jenkins install & setup
 ├── docs/
-│   └── jenkins-iac-journey.md # Full narrative & documentation
+│   └── jenkins-iac-journey.md
+│       # Narrative & learning journey
+├── Jenkinsfile
+│   # Declarative Jenkins pipeline
 └── README.md
+    # Project overview
 </details>
 
 ---
