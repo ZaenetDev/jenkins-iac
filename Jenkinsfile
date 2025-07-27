@@ -1,5 +1,9 @@
 /* groovylint-disable DuplicateMapLiteral, DuplicateStringLiteral, GStringExpressionWithinString, NestedBlockDepth */
-/* groovylint-disable-next-line CompileStatic */
+/* groovylint-disable CompileStatic */
+
+//JenkinsFile for Jenkins IAC Pipeline
+  //This pipeline automates the provisioning of a Jenkins worker VM using Terraform and Ansible.
+
 pipeline {
   agent { label 'jenkins-worker-40' }
 
@@ -11,6 +15,7 @@ pipeline {
     ANSIBLE_DIR = 'ansible'
   }
 
+// Code check out from repository
   stages {
     stage('Checkout') {
       steps {
@@ -23,7 +28,7 @@ pipeline {
         ])
       }
     }
-
+//Terraform intiilization, plan, apply and output
     stage('Terraform Init') {
       steps {
         dir(env.TERRAFORM_DIR) {
@@ -55,7 +60,7 @@ pipeline {
         }
       }
     }
-
+// Terraform apply to create the VM from terraform/jenkins-vm/main.tf
     stage('Terraform Apply') {
       steps {
           withCredentials([
@@ -79,7 +84,7 @@ pipeline {
           }
       }
     }
-
+// Capture the VM IP address from Terraform output to be passed to Ansible for configuration
     stage('Terraform Output') {
       steps {
         dir(env.TERRAFORM_DIR) {
@@ -94,7 +99,7 @@ pipeline {
         }
       }
     }
-
+// Ansible playbook execution to configure the Jenkins worker VM
     stage('Run Ansible Playbook') {
       steps {
         script {
@@ -125,7 +130,7 @@ pipeline {
         }
       }
     }
-
+// Verify that Jenkins is up and running by checking the port
     stage('Verify Jenkins') {
       steps {
         script {
@@ -143,7 +148,7 @@ pipeline {
         }
       }
     }
-
+// Display the Jenkins URL for easy access
     stage('Jenkins Info') {
       steps {
         echo "Jenkins deployed at: http://${JENKINS_IP}:8080"
