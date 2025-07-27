@@ -6,8 +6,6 @@ This document captures the full technical and learning journey undertaken to bui
 
 ## 1. Initial Dev Environment Setup
 
-Though often skipped on resumes, the initial development environment setup was critical. We configured:
-
 - **WSL2 with Ubuntu** on Windows for local dev.
 - **VS Code** with remote SSH, extensions for Terraform, YAML, Ansible, and Git.
 - **Terraform**, **Ansible**, and **Git CLI** installations.
@@ -21,7 +19,7 @@ _Accomplishment:_ Set up a reproducible dev environment for full-stack IaC workf
 
 ## 2. Proxmox + Terraform Integration (Secure API)
 
-We created a `provider.tf` file using the `telmate/proxmox` provider, and secured access with an API token instead of username/password.
+I created a `provider.tf` file using the `telmate/proxmox` provider, and secured access with an API token instead of username/password.
 
 _Challenge:_ 
 - Understanding how to structure Terraform for Proxmox (resource blocks, provider syntax).
@@ -35,7 +33,7 @@ _Accomplishment:_
 
 ## 3. Spinning up a Basic Ubuntu VM
 
-With Proxmox connected, we created a Terraform plan to:
+With Proxmox connected, I created a Terraform plan to:
 
 - Spin up a new Ubuntu VM from a cloud-init enabled template.
 - Apply static IP, disk sizing, VM name, and SSH key injection.
@@ -58,7 +56,7 @@ Used Ansible to:
 - Install Jenkins (initially manually)
 - Set hostname and deploy common packages
 
-We leveraged cloud-init to inject an SSH key, then used that key with Ansible.
+I leveraged cloud-init to inject an SSH key, then used that key with Ansible.
 
 _Challenge:_
 - Passing secrets between Terraform → Jenkins → Ansible securely
@@ -72,13 +70,13 @@ _Accomplishment:_
 
 ## 5. Manual Jenkins Install
 
-Initially we:
+Initially:
 
 - SSH’d in
 - Manually installed Jenkins
 - Understood the initial wizard, unlock key, and setup flow
 
-_Challenge:_ Had to learn the pieces Jenkins installs, where it puts config, and how to replicate manually what we later automated.
+_Challenge:_ Had to learn the pieces Jenkins installs, where it puts config, and how to replicate manually what I later automated.
 
 _Accomplishment:_ Understood the anatomy of Jenkins before automating it.
 
@@ -86,7 +84,7 @@ _Accomplishment:_ Understood the anatomy of Jenkins before automating it.
 
 ## 6. Jenkins Automation Begins
 
-We built an Ansible playbook to automate Jenkins installation. This included:
+I built an Ansible playbook to automate Jenkins installation. This included:
 
 - Repo configuration
 - Java dependencies
@@ -105,7 +103,7 @@ _Accomplishment:_ Jenkins installed, fully configured, and password-less within 
 
 ## 7. Advanced Jenkins Setup: Wizard Bypass, Plugins, Secrets
 
-We extended the Jenkins automation to:
+I extended the Jenkins automation to:
 
 - Use `init.groovy.d` to skip the wizard
 - Create users and set passwords via Groovy
@@ -121,7 +119,7 @@ _Accomplishment:_ Bootstrapped Jenkins without manual input, ready to accept bui
 
 ## 8. Jenkinsfile and VM Numbering by Build
 
-We wrote a `Jenkinsfile` that:
+I wrote a `Jenkinsfile` that:
 
 - Pulled from GitHub
 - Called Terraform with the build number as a suffix
@@ -137,7 +135,7 @@ _Accomplishment:_ Jenkins pipeline could launch a brand-new VM with a unique nam
 
 ## 🛠️ Interlude: Git Learning Journey
 
-We paused to:
+I paused to:
 
 - Learn Git fundamentals
 - Understand the difference between `git commit`, `push`, `pull`, and `clone`
@@ -154,11 +152,11 @@ _Accomplishment:_ Built Git muscle memory and integrated version control into ou
 
 ## 9. Securing `sh` Calls and Secrets
 
-We replaced all inline variable injection in `sh` with proper bindings.
+I replaced all inline variable injection in `sh` with proper bindings.
 
 _Challenge:_
 - Jenkins warns if secrets are used inside double-quoted strings (`sh "some command $SECRET"`)
-- We updated all commands to safely pass them in `${}` blocks or as `environment {}` vars
+- I updated all commands to safely pass them in using `withCredentials`. This reduced scope to stage instead of a global environment variable.
 
 _Accomplishment:_ Fully secure Jenkinsfile with no leaking secrets to logs or process trees.
 
@@ -168,7 +166,7 @@ _Accomplishment:_ Fully secure Jenkinsfile with no leaking secrets to logs or pr
 
 To prepare for distributed builds:
 
-- Created a new VM as `jenkins-worker` using our pipeline
+- Created a new VM as `jenkins-worker` using the pipeline
 - Added SSH keys to allow Jenkins master to authenticate
 - Registered it as a node in Jenkins UI
 - Used `SSHLauncher` to connect and verify agent startup
@@ -185,8 +183,9 @@ _Accomplishment:_ Jenkins master now supports distributed builds across multiple
 
 - Automate worker node setup
 - Build reusable modules for Terraform
-- Parameterize Jenkins jobs
-- Add dashboards and observability (Grafana, Zabbix)
+- Explore deployment of docker containers and kubernetes orchestration as code
+- Add observability using Zabbix, Prometheus and Grafana
+- Build AWS infra utilizing same pipeline to compliment pursuit of AWS Certified DevOps Professional certificate.
 
 ---
 
@@ -194,7 +193,7 @@ _Accomplishment:_ Jenkins master now supports distributed builds across multiple
 
 This entire project was done from scratch using a self-taught approach and a desire to simulate real-world DevOps problems in a homelab. Major takeaways:
 
-- Deep understanding of how the pieces fit together (Terraform, Ansible, Jenkins, Git)
+- Building understanding of how the pieces fit together (Terraform, Ansible, Jenkins, Git)
 - Real-world security hygiene (secrets management, credential boundaries)
 - Infrastructure lifecycle automation
 
