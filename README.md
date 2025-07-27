@@ -58,5 +58,5 @@ jenkins-iac
 ## 🎯 What's Next
 
 - [ ] Automate Jenkins worker provisioning
-- [ ] Add linting and validation to Jenkins pipeline
-- [ ] Containerize the Jenkins master for portability
+- [ ] Build AWS infra using same pipeline to compliment pursuit of AWS Certified DevOps Professional certificate
+- [ ] Explore deploying docker containers and kubernetes orchestration using skills learned from this project
